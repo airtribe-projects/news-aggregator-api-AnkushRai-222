@@ -1,6 +1,6 @@
 const axios = require('axios');
 const NEWS_API_KEY = process.env.NEWS_API_KEY;
-const URL =process.env.NEWS_API_URL;
+const URL = process.env.NEWS_API_URL;
 
 
 exports.getNews = async (user) => {
@@ -16,6 +16,12 @@ exports.getNews = async (user) => {
       : [];
 
     const q = prefs.length ? prefs.join(" OR ") : "news";
+
+    if (!NEWS_API_KEY || !URL) {
+      const err = new Error("Server misconfiguration: NEWS_API_KEY and NEWS_API_URL must be set");
+      err.status = 500;
+      throw err;
+    }
 
     const resp = await axios.get(URL, {
       params: {

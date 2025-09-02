@@ -21,18 +21,21 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/', userRoutes);
+app.use('/users', userRoutes);
 app.use('/', newsRoutes);
 
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
   .then(() => {
     console.log("🟢 Connected With Mongodb DataBase");
-    
+
     app.listen(port, (err) => {
       if (err) {
-        return console.log("Something bad happened", err);
+        return console.error("Something bad happened", err);
       }
-      console.error(`Server is listening on ${port}`);
+      console.log(`Server is listening on ${port}`);
     });
   })
   .catch((err) => console.error(err));

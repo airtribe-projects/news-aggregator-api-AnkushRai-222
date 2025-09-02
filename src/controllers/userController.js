@@ -1,7 +1,10 @@
 const User = require('../models/userModel');
 const jwt = require('jsonwebtoken');
 
-const JWT_SECRET = process.env.JWT_SECRET ;
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET || typeof JWT_SECRET !== 'string' || JWT_SECRET.trim() === '') {
+  throw new Error('Missing required environment variable JWT_SECRET');
+}
 
 exports.signup = async ( { name, email, password, preferences }) => {
     try {
@@ -46,8 +49,8 @@ exports.login = async ({ email, password }) => {
 
 exports.getPreferences = async (user) => {
   try {
-    if (!user) {
-      const err = new Error("User not found");
+    if (!user || typeof user !== 'object' || Array.isArray(user)) {
+      const err = new Error("User not found or invalid");
       err.status = 401;
       throw err;
     }
@@ -71,3 +74,4 @@ exports.updatePreferences = async (user, prefs) => {
     throw err;
   }
 };
+

@@ -16,7 +16,7 @@ const handleValidation = (req, res, next) => {
   next();
 };
 
-router.post("/users/signup", [
+router.post("/signup", [
     body("name").notEmpty().trim().withMessage("name is required"),
     body("email").notEmpty().trim().withMessage("email is required"),
     body("password").notEmpty().trim().withMessage("password is required"),
@@ -27,7 +27,7 @@ router.post("/users/signup", [
     .catch((err) => res.status(err.status || 500).json({ error: err.message }));
 });
 
-router.post("/users/login", [
+router.post("/login", [
     body("email").notEmpty().trim().withMessage("email is required"),
     body("password").notEmpty().trim().withMessage("password is required"),
   ], handleValidation, async (req, res) => {
@@ -41,7 +41,7 @@ router.post("/users/login", [
 });
 
 
-router.get("/users/preferences", auth, async (req, res) => {
+router.get("/preferences", auth, async (req, res) => {
   try {
     const preferences = await getPreferences(req.user);
     return res.status(200).json({ preferences });
@@ -50,7 +50,7 @@ router.get("/users/preferences", auth, async (req, res) => {
   }
 });
 
-router.put("/users/preferences", auth, [
+router.put("/preferences", auth, [
     body("preferences").isArray().withMessage("preferences must be an array"),
   ], handleValidation, async (req, res) => {
   try {
@@ -61,14 +61,6 @@ router.put("/users/preferences", auth, [
   }
 });
 
-// News (protected)
-// router.get('/news', auth, async (req, res) => {
-//   try {
-//     const news = await getNews();
-//     return res.status(200).json({ news });
-//   } catch (err) {
-//     return res.status(500).json({ error: err.message });
-//   }
-// });
 
 module.exports = router;
+
